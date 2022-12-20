@@ -1,0 +1,53 @@
+version: "3"
+services:
+  webserver:
+    container_name: webserver
+    build:
+      context: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - yeetnet
+    volumes:
+      - ./certbot/root:/var/www/certbot
+      - ./certbot/etc:/etc/letsencrypt
+      - ./certbot/var:/var/lib/letsencrypt
+      - ./certbot/dhparam:/etc/ssl/certs
+    depends_on:
+      - yeet
+  yeet:
+      image: olamileke/theyeetapp-yeet
+      container_name: yeet
+      volumes: 
+          - ./env/yeet.env:/var/www/.env
+      networks:
+          - yeetnet
+  yeetdb:
+    image: mysql:8.0
+    container_name: yeetdb
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./yeetdb:/var/lib/mysql
+    environment:
+      - "MYSQL_DATABASE=yeetdb"
+      - "MYSQL_USER=yeet_user"
+      - "MYSQL_PASSWORD=yeet_password"
+      - "MYSQL_ROOT_PASSWORD=yeet_password"
+    networks:
+      - yeetnet
+  # certbot:
+  #   image: certbot/dns-digitalocean
+  #   container_name: certbot
+  #   volumes:
+  #     - ./certbot/root:/var/www/certbot
+  #     - ./certbot/etc:/etc/letsencrypt
+  #     - ./certbot/var:/var/lib/letsencrypt
+  #     - ./certbot/credentials:/credentials
+  #   command: certonly --dns-digitalocean --dns-digitalocean-credentials /credentials/credentials.ini -d theyeetapp.com -d *.theyeetapp.com
+networks:
+  yeetnet:
+    driver: bridge
