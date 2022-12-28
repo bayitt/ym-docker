@@ -9,6 +9,7 @@ services:
       - "443:443"
     networks:
       - me-net
+      - maui-net
       - yeetnet
     volumes:
       - ./certbot/root:/var/www/certbot
@@ -16,17 +17,16 @@ services:
       - ./certbot/var:/var/lib/letsencrypt
       - ./certbot/dhparam:/etc/ssl/certs
     depends_on:
-      - bookble
       - yeet
       - yeetbot
       - notify
-  bookble:
-    image: olamileke/bookble
-    container_name: bookble
-    networks:
-      - me-net
-    volumes:
-      - ./env/bookble.env:/usr/src/app/.env
+  # bookble:
+  #   image: olamileke/bookble
+  #   container_name: bookble
+  #   networks:
+  #     - me-net
+  #   volumes:
+  #     - ./env/bookble.env:/usr/src/app/.env
   notify:
     image: olamileke/notify
     container_name: notify
@@ -34,6 +34,22 @@ services:
       - me-net
     volumes:
       - ./env/notify.env:/usr/src/app/.env
+  mauidb:
+    image: mysql:8.0
+    container_name: mauidb
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mauidb:/var/lib/mysql
+    environment:
+      - "MYSQL_DATABASE=mauidb"
+      - "MYSQL_USER=maui_user"
+      - "MYSQL_PASSWORD=maui_password"
+      - "MYSQL_ROOT_PASSWORD=maui_password"
+    networks:
+      - maui-net
   yeet:
     image: olamileke/theyeetapp-yeet
     container_name: yeet
@@ -76,6 +92,8 @@ services:
   #   command: certonly --dns-digitalocean --dns-digitalocean-credentials /credentials/credentials.ini -d olamileke.me -d *.olamileke.me
 networks:
   me-net:
+    driver: bridge
+  maui-net:
     driver: bridge
   yeetnet:
     driver: bridge
