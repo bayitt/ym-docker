@@ -17,6 +17,8 @@ services:
       - ./certbot/var:/var/lib/letsencrypt
       - ./certbot/dhparam:/etc/ssl/certs
     depends_on:
+      - maui
+      - mauiapi
       - yeet
       - yeetbot
       - notify
@@ -34,6 +36,20 @@ services:
       - me-net
     volumes:
       - ./env/notify.env:/usr/src/app/.env
+  maui:
+    image: olamileke/mauiapp-maui
+    container_name: maui
+    networks:
+      - maui-net
+    volumes:
+      - ./env/maui.env:/app/build/.env
+  mauiapi:
+    image: olamileke/mauiapp-mauiapi
+    container_name: mauiapi
+    networks:
+      - maui-net
+    volumes: 
+      - ./env/mauiapi.env:/var/www/.env
   mauidb:
     image: mysql:8.0
     container_name: mauidb
