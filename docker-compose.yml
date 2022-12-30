@@ -22,6 +22,7 @@ services:
       - yeet
       - yeetbot
       - notify
+      - trim-api
   # bookble:
   #   image: olamileke/bookble
   #   container_name: bookble
@@ -36,13 +37,20 @@ services:
       - me-net
     volumes:
       - ./env/notify.env:/usr/src/app/.env
+  trim-api:
+    image: olamileke/trim-api
+    container_name: trim-api
+    networks:
+      - me-net
+    volumes:
+      - ./env/trim-api.env:/app/.env
   maui:
     image: olamileke/mauiapp-maui
     container_name: maui
     networks:
       - maui-net
     volumes:
-      - ./env/maui.env:/app/build/.env
+      - ./env/maui-env.js:/app/build/env.js
   mauiapi:
     image: olamileke/mauiapp-mauiapi
     container_name: mauiapi
