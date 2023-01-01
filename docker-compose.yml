@@ -23,13 +23,13 @@ services:
       - yeetbot
       - notify
       - trim-api
-  # bookble:
-  #   image: olamileke/bookble
-  #   container_name: bookble
-  #   networks:
-  #     - me-net
-  #   volumes:
-  #     - ./env/bookble.env:/usr/src/app/.env
+  bookble:
+    image: olamileke/bookble
+    container_name: bookble
+    networks:
+      - me-net
+    volumes:
+      - ./env/bookble.env:/usr/src/app/.env
   notify:
     image: olamileke/notify
     container_name: notify
@@ -113,7 +113,7 @@ services:
   #     - ./certbot/etc:/etc/letsencrypt
   #     - ./certbot/var:/var/lib/letsencrypt
   #     - ./certbot/credentials:/credentials
-  #   command: certonly --dns-digitalocean --dns-digitalocean-credentials /credentials/credentials.ini -d olamileke.me -d *.olamileke.me
+  #   command: certonly --dns-digitalocean --dns-digitalocean-credentials /credentials/credentials.ini -d mauii.xyz -d *.mauii.xyz
 networks:
   me-net:
     driver: bridge
