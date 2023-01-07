@@ -19,6 +19,7 @@ services:
     depends_on:
       - maui
       - mauiapi
+      - mauibot
       - yeet
       - yeetbot
       - notify
@@ -58,6 +59,14 @@ services:
       - maui-net
     volumes: 
       - ./env/mauiapi.env:/var/www/.env
+  mauibot:
+    image: olamileke/mauiapp-mauibot
+    container_name: mauibot
+    volumes:
+      - ./env/mauibot.env:/mauibot/.env
+      - ./bots/mauibot/storage:/mauibot/storage
+    networks:
+      - maui-net
   mauidb:
     image: mysql:8.0
     container_name: mauidb
