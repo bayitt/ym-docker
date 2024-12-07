@@ -11,6 +11,7 @@ services:
       - me-net
       - maui-net
       - yeetnet
+      - botnet
     volumes:
       - ./certbot/root:/var/www/certbot
       - ./certbot/etc:/etc/letsencrypt
@@ -22,14 +23,6 @@ services:
       - mauibot
       - yeet
       - yeetbot
-      - trim-api
-  trim-api:
-    image: olamileke/trim-api
-    container_name: trim-api
-    networks:
-      - me-net
-    volumes:
-      - ./env/trim-api.env:/app/.env
   maui:
     image: olamileke/mauiapp-maui
     container_name: maui
@@ -99,6 +92,27 @@ services:
       - "MYSQL_ROOT_PASSWORD=yeet_password"
     networks:
       - yeetnet
+  factsonfactsbot:
+    container_name: factsonfactsbot
+    image: olamileke/factsonfactsbot
+    volumes:
+      - ./env/factsonfactsbot.env:/factsonfactsbot/.env
+    networks:
+      - botnet
+  newsondemandbot:
+    container_name: newsondemandbot
+    image: olamileke/newsondemandbot
+    volumes:
+      - ./env/newsondemandbot.env:/newsondemandbot/.env
+    networks:
+      - botnet
+  politicalnewsbot:
+    container_name: politicalnewsbot
+    image: olamileke/politicalnewsbot
+    volumes:
+      - ./env/politicalnewsbot.env:/politicalnewsbot/.env
+    networks:
+      - botnet
   # certbot:
   #   image: certbot/dns-digitalocean
   #   container_name: certbot
@@ -107,7 +121,16 @@ services:
   #     - ./certbot/etc:/etc/letsencrypt
   #     - ./certbot/var:/var/lib/letsencrypt
   #     - ./certbot/credentials:/credentials
-  #   command: certonly --dns-digitalocean --dns-digitalocean-credentials /credentials/credentials.ini -d theyeetapp.com -d *.theyeetapp.com
+  #   command: certonly --dns-digitalocean --dns-digitalocean-credentials /credentials/credentials.ini -d olamileke.dev -d *.olamileke.dev
+  # certbot:
+  #   image: certbot/dns-cloudflare
+  #   container_name: certbot
+  #   volumes:
+  #     - ./certbot/root:/var/www/certbot
+  #     - ./certbot/etc:/etc/letsencrypt
+  #     - ./certbot/var:/var/lib/letsencrypt
+  #     - ./cloudflare/credentials:/credentials
+  #   command: certonly --dns-cloudflare --dns-cloudflare-credentials /credentials/credentials.ini -d theyeetapp.com -d *.theyeetapp.com
 networks:
   me-net:
     driver: bridge
@@ -115,3 +138,6 @@ networks:
     driver: bridge
   yeetnet:
     driver: bridge
+  botnet:
+    driver:
+      bridge
